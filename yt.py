@@ -1,28 +1,24 @@
-import os
 from crewai import Agent, Task, Crew
-from crewai_tools import  PDFSearchTool
+from crewai_tools import YoutubeVideoSearchTool
 from dotenv import load_dotenv
-import os
-
 load_dotenv()
 
-DOCUMENT_PATH = os.environ.get("DOCUMENT_PATH")
-pdf_search = PDFSearchTool(pdf=DOCUMENT_PATH)
+tool = YoutubeVideoSearchTool()
 
 retriever = Agent(
   role='Retriever',
-  goal='Retrieve information from the PDF',
-  backstory="Your task is to retrieve information from the PDF.",
+  goal='Retrieve information from the video',
+  backstory="You retrieve infromation from the video",
   verbose=True,
   allow_delegation=False,
-  tools=[pdf_search],
+  tools=[tool],
 )
 
-query = input("Enter your query: ")
+# query = input("Enter your query: ")
 
 task1 = Task(
-  description=query,
-  expected_output="2-3 sentences",
+  description="list all the book mentioned in this video with a very short summary for each of them",
+  expected_output="Build a list",
   agent=retriever
 )
 
