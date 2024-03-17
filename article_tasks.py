@@ -1,17 +1,17 @@
+import datetime
 from crewai import Task
 
 class ArticleTasks():
-	def research_task(self, agent, topic):
+	def research_task(self, topic):
 		return Task(
 			description=f'Research the latest trends in the {topic} and provide a summary.',
-			expected_output=f'A summary of the top 3 trending developments in the {topic} with a unique perspective on their significance.',
-			agent=agent
+			expected_output=f'A summary the information about {topic}',
 		)
 
-	def write_task(self, agent, topic, file_name):
+	def write_task(self, topic):
+		current_date_time = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 		return Task(
 			description=f'Write an engaging blog post about the {topic}, based on the research analyst’s summary.',
 			expected_output=f'A 4-paragraph blog post formatted in markdown with engaging, informative, and accessible content, avoiding complex jargon.',
-			agent=agent,
-			output_file=f'blog-posts/{file_name}.md'
+			output_file=f'blog-posts/{current_date_time}.md'
 		)

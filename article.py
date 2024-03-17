@@ -1,21 +1,21 @@
-from crewai import Agent, Crew
-from crewai_tools import (
-    WebsiteSearchTool
-)
+import os
+from crewai import Agent, Crew, Process
+from crewai_tools import WebsiteSearchTool, YoutubeVideoSearchTool
 from langchain_community.tools import DuckDuckGoSearchRun
 from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
 from article_tasks import ArticleTasks
 
 load_dotenv()
 search_tool = DuckDuckGoSearchRun() 
 web_rag_tool = WebsiteSearchTool()
+yt_rag_tool = YoutubeVideoSearchTool()
 
 researcher = Agent(
     role='Researcher',
     goal='Provide up-to-date analysis',
-    backstory='An expert analyst with a keen eye for trends.',
-    tools=[search_tool, web_rag_tool],
-    allow_delegation=False,
+    backstory='An expert analyst',
+    tools=[search_tool, web_rag_tool, yt_rag_tool],
     verbose=True
 )
 
@@ -27,16 +27,17 @@ writer = Agent(
 )
 
 topic = input("Enter a topic: ")
-file_name = input("Enter file name: ")
 
 tasks = ArticleTasks()
-research = tasks.research_task(researcher, topic)
-write = tasks.write_task(writer, topic, file_name)
+research = tasks.research_task(topic)
+write = tasks.write_task(topic)
 
 crew = Crew(
     agents=[researcher, writer],
     tasks=[research, write],
-    verbose=2
+    verbose=2,
+    manager_llm=ChatOpenAI(temperature=0, model=os.getenv('OPENAI_MODEL_NAME')),
+    process=Process.hierarchical,
 )
 
 crew.kickoff()
