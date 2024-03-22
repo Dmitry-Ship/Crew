@@ -1,13 +1,15 @@
 import os
 from crewai import Agent, Crew, Process
 from crewai_tools import WebsiteSearchTool, YoutubeVideoSearchTool
-from langchain_community.tools import DuckDuckGoSearchRun
+from langchain_community.tools import DuckDuckGoSearchResults
+from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from article_tasks import ArticleTasks
 
 load_dotenv()
-search_tool = DuckDuckGoSearchRun() 
+wrapper = DuckDuckGoSearchAPIWrapper()
+search_tool = DuckDuckGoSearchResults(api_wrapper=wrapper)
 web_rag_tool = WebsiteSearchTool()
 yt_rag_tool = YoutubeVideoSearchTool()
 

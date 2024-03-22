@@ -4,7 +4,7 @@ from crewai import Task
 class ArticleTasks():
 	def research_task(self, topic):
 		return Task(
-			description=f'Research the latest trends in the {topic} and provide a summary.',
+			description=f'Research the {topic} and provide a summary.',
 			expected_output=f'A summary the information about {topic}',
 		)
 
